@@ -12,7 +12,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-from models import ResNet50, WideResNet50
+from models import ResNet50, WideResNet50, WideResNet101
 from dataset import ButterflyDataset, ButterflyTestDataset, get_labels
 
 
@@ -41,7 +41,7 @@ def main():
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = WideResNet50(num_classes=num_classes)
+    model = WideResNet101(num_classes=num_classes)
     model = model.to(device)
     
     k_folds = 5
@@ -51,7 +51,7 @@ def main():
     indices = torch.randperm(dataset_size)
     
     epoches = 20
-    batch_size = 128
+    batch_size = 64
     
     best_val_acc = 0
     
@@ -64,7 +64,7 @@ def main():
         train_loader = DataLoader(train_dataset, batch_size=batch_size, sampler=train_subsampler)
         val_loader = DataLoader(train_dataset, batch_size=batch_size, sampler=val_subsampler)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
         criterion = nn.CrossEntropyLoss()
         
         for epoch in range(epoches):
