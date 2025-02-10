@@ -12,7 +12,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-from models import ResNet50
+from models import ResNet50, WideResNet50
 from dataset import ButterflyDataset, ButterflyTestDataset, get_labels
 
 
@@ -41,7 +41,7 @@ def main():
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = ResNet50(num_classes=num_classes)
+    model = WideResNet50(num_classes=num_classes)
     model = model.to(device)
     
     k_folds = 5
