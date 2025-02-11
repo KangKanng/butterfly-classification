@@ -1,7 +1,10 @@
-# self
+# customize
 data/
 *.pth
 logs/
+*.job
+*.out
+submission.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
