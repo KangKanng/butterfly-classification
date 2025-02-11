@@ -12,7 +12,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-from models import ResNet50, WideResNet50, WideResNet101
+from models import ResNet50, WideResNet50, WideResNet101, VIT_b_16
 from dataset import ButterflyDataset, ButterflyTestDataset, get_labels
 
 
@@ -24,8 +24,15 @@ def main():
     
     label_to_idx, idx_to_label, num_classes = get_labels(train_df)
     
-    transform_ops = transforms.Compose([
+    transform_ops_vit = transforms.Compose([
         transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                        std=[0.229, 0.224, 0.225])
+    ])
+    
+    transform_ops_vit_vit = transforms.Compose([
+        transforms.Resize((384, 384)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406],
                         std=[0.229, 0.224, 0.225])
@@ -36,12 +43,12 @@ def main():
     train_dataset = ButterflyDataset(
         csv_file=train_df,
         root_dir='./data/train_images/',
-        transform=transform_ops
+        transform=transform_ops_vit_vit
     )
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = WideResNet101(num_classes=num_classes)
+    model = VIT_b_16(num_classes=num_classes)
     model = model.to(device)
     
     k_folds = 5
@@ -130,7 +137,7 @@ def main():
     test_dataset = ButterflyTestDataset(
         csv_file=test_df,
         root_dir='./data/test_images/',
-        transform=transform_ops
+        transform=transform_ops_vit
     )
     test_loader = DataLoader(
         test_dataset,

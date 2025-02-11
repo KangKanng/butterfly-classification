@@ -98,9 +98,9 @@ class VIT_b_16(nn.Module):
         for param in self.model.parameters():
             param.requires_grad = True
         
-        # 修改最后的全连接层
-        in_features = self.model.fc.in_features
-        self.model.fc = nn.Sequential(
+        # 修改最后的分类层：访问 heads 第一个层的 in_features 属性
+        in_features = self.model.heads[0].in_features
+        self.model.heads = nn.Sequential(
             nn.Linear(in_features, 512),
             nn.ReLU(),
             nn.Dropout(0.5),
