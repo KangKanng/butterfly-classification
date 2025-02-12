@@ -115,7 +115,7 @@ class EfficientNet(nn.Module):
     
 class EfficientNet_M(nn.Module):    
     def __init__(self, num_classes):
-        super(EfficientNet, self).__init__()
+        super(EfficientNet_M, self).__init__()
         
         self.model = models.efficientnet_v2_l(weights=models.EfficientNet_V2_M_Weights.IMAGENET1K_V1)
         
