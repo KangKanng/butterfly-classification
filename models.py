@@ -117,7 +117,7 @@ class EfficientNet_M(nn.Module):
     def __init__(self, num_classes):
         super(EfficientNet_M, self).__init__()
         
-        self.model = models.efficientnet_v2_l(weights=models.EfficientNet_V2_M_Weights.IMAGENET1K_V1)
+        self.model = models.efficientnet_v2_m(weights=models.EfficientNet_V2_M_Weights.IMAGENET1K_V1)
         
         for param in self.model.parameters():
             param.requires_grad = True
