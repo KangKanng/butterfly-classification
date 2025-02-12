@@ -12,11 +12,15 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-from models import ResNet50, WideResNet50, WideResNet101, VIT_b_16
-from dataset import ButterflyDataset, ButterflyTestDataset, get_labels
+from models import ResNet50, WideResNet50, WideResNet101, VIT_b_16, EfficientNet
+from dataset import ButterflyDataset, ButterflyTestDataset, get_labels, transform_ops_resnet, \
+    transform_ops_vit, transform_ops_efficientnet_v2_l 
 
 
 def main():
+    
+    transform = transform_ops_efficientnet_v2_l
+    
     train_path = './data/train.csv'
     test_path = './data/test.csv'
     
@@ -24,31 +28,19 @@ def main():
     
     label_to_idx, idx_to_label, num_classes = get_labels(train_df)
     
-    transform_ops_vit = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                        std=[0.229, 0.224, 0.225])
-    ])
-    
-    transform_ops_vit_vit = transforms.Compose([
-        transforms.Resize((384, 384)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                        std=[0.229, 0.224, 0.225])
-    ])
+
     
     train_df['label_idx'] = train_df['label'].map(label_to_idx)
     
     train_dataset = ButterflyDataset(
         csv_file=train_df,
         root_dir='./data/train_images/',
-        transform=transform_ops_vit_vit
+        transform=transform
     )
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = VIT_b_16(num_classes=num_classes)
+    model = EfficientNet(num_classes=num_classes)
     model = model.to(device)
     
     k_folds = 5
@@ -137,7 +129,7 @@ def main():
     test_dataset = ButterflyTestDataset(
         csv_file=test_df,
         root_dir='./data/test_images/',
-        transform=transform_ops_vit
+        transform=transform
     )
     test_loader = DataLoader(
         test_dataset,

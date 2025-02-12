@@ -2,6 +2,7 @@ import os
 import torch
 from torch.utils.data import Dataset
 from PIL import Image
+import torchvision.transforms as transforms
 
 def get_labels(train_df):
     # 获取所有唯一标签
@@ -60,3 +61,42 @@ class ButterflyTestDataset(Dataset):
         # label = torch.tensor(label)
         
         return image
+    
+transform_ops_resnet = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomChoice([
+        transforms.RandomRotation((90, 90)),
+        transforms.RandomRotation((180, 180)),
+        transforms.RandomRotation((270, 270)),
+        transforms.Lambda(lambda x: x)  # 不旋转
+    ]),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                        std=[0.229, 0.224, 0.225])
+])
+
+transform_ops_vit = transforms.Compose([
+    transforms.Resize((384, 384)),
+    transforms.RandomChoice([
+        transforms.RandomRotation((90, 90)),
+        transforms.RandomRotation((180, 180)),
+        transforms.RandomRotation((270, 270)),
+        transforms.Lambda(lambda x: x)  # 不旋转
+    ]),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                        std=[0.229, 0.224, 0.225])
+])
+
+transform_ops_efficientnet_v2_l = transforms.Compose([
+    transforms.Resize((480, 480)),
+    transforms.RandomChoice([
+        transforms.RandomRotation((90, 90)),
+        transforms.RandomRotation((180, 180)),
+        transforms.RandomRotation((270, 270)),
+        transforms.Lambda(lambda x: x)  # 不旋转
+    ]),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                        std=[0.229, 0.224, 0.225])
+])
