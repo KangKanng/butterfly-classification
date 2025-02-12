@@ -111,3 +111,25 @@ class EfficientNet(nn.Module):
         
     def forward(self, x):
         return self.model(x)
+    
+    
+class EfficientNet_M(nn.Module):    
+    def __init__(self, num_classes):
+        super(EfficientNet, self).__init__()
+        
+        self.model = models.efficientnet_v2_l(weights=models.EfficientNet_V2_M_Weights.IMAGENET1K_V1)
+        
+        for param in self.model.parameters():
+            param.requires_grad = True
+            
+        in_features = self.model.classifier[1].in_features
+        self.model.classifier = nn.Sequential(
+            nn.Dropout(p=0.3, inplace=True),
+            nn.Linear(in_features, 512),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(512, num_classes)
+        )
+        
+    def forward(self, x):
+        return self.model(x)

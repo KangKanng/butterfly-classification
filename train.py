@@ -12,7 +12,7 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-from models import ResNet50, WideResNet50, WideResNet101, VIT_b_16, EfficientNet
+from models import ResNet50, WideResNet50, WideResNet101, VIT_b_16, EfficientNet, EfficientNet_M
 from dataset import ButterflyDataset, ButterflyTestDataset, get_labels, transform_ops_resnet, \
     transform_ops_vit, transform_ops_efficientnet_v2_l 
 
@@ -40,7 +40,7 @@ def main():
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = EfficientNet(num_classes=num_classes)
+    model = EfficientNet_M(num_classes=num_classes)
     model = model.to(device)
     
     k_folds = 5
